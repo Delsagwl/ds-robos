@@ -38,7 +38,7 @@ QBCore.Functions.CreateCallback('ds-robos:server:GetCops', function(_, cb) -- po
     local players = QBCore.Functions.GetQBPlayers()
     for _, v in pairs(players) do
         if v and v.PlayerData.job.name == "police" and v.PlayerData.job.onduty then
-            amount += 1
+            amount = amount + 1
         end
     end
     cb(amount)

@@ -3,10 +3,14 @@ game 'gta5'
 
 author 'Delsa <Delsa#8971>'
 description 'Robar NPCs'
-version '1.2.0'
+version '1.2.1'
 
 client_scripts {
     'client/client.lua'
+    '@PolyZone/client.lua',
+    '@PolyZone/BoxZone.lua',
+    '@PolyZone/ComboZone.lua',
+    '@PolyZone/EntityZone.lua',
 }
 server_scripts {
     'server/server.lua'

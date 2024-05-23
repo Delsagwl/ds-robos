@@ -44,6 +44,55 @@ RegisterNetEvent("ds-robos:Client:TogleRobarNPC", function()
     end)
 end)
 
+local function RobberyPed(targetPed)
+    CreateThread(function()
+        while targetPed do
+            if IsEntityDead(targetPed) then
+                local playerPed = PlayerPedId()
+                local pos = GetEntityCoords(playerPed)
+                local pedpos = GetEntityCoords(targetPed)
+                if #(pos - pedpos) < 1.5 then
+                    if not textDrawn then
+                        textDrawn = true
+                        exports['qb-core']:DrawText("[E] Rebuscar en los bolsillos")
+                    end
+                    if IsControlJustReleased(0, 38) then
+                        exports['qb-core']:KeyPressed()
+                        textDrawn = false
+                        RequestAnimDict("pickup_object")
+                        while not HasAnimDictLoaded("pickup_object") do
+                            Wait(0)
+                        end
+                        TaskPlayAnim(playerPed, "pickup_object", "pickup_low", 8.0, -8.0, -1, 1, 0, false, false, false)
+                        Wait(2000)
+                        ClearPedTasks(playerPed)
+                        local suerte = exports['ps-buffs']:HasBuff("suerte")
+                        local coords = GetEntityCoords(PlayerPedId())
+                        local paleto = #(coords - Robos.paleto)
+                        if paleto > 1000 then
+                            TriggerServerEvent('ds-robos:recompensa', suerte)
+                        else
+                            QBCore.Functions.Notify("En esta zona la gente es muy pobre", "error")
+                        end
+                        targetPed = nil
+                        stealData = {}
+                    end
+                end
+            else
+                local playerPed = PlayerPedId()
+                local pos = GetEntityCoords(playerPed)
+                local pedpos = GetEntityCoords(targetPed)
+                if #(pos - pedpos) > 100 then
+                    targetPed = nil
+                    stealData = {}
+                    break
+                end
+            end
+            Wait(0)
+        end
+    end)
+end
+
 Citizen.CreateThread(function()
     while true do
         local sleep = 3000
@@ -65,6 +114,23 @@ Citizen.CreateThread(function()
                                     local distance = GetDistanceBetweenCoords(GetEntityCoords(usuario, true), GetEntityCoords(victima, true), false)
                                     if distance < 6 then
                                         if pedAtacada[victima] == nil then
+                                        if luck < Robos.Agresivo then
+                                            roboActivo = true
+                                            ClearPedTasksImmediately(victima)
+                                            GiveWeaponToPed(victima,'WEAPON_KNIFE', 250, false, true)
+                                            SetPedCombatAttributes(victima, 0, true)
+                                            SetPedCombatAttributes(victima, 5, true)
+                                            SetPedCombatAbility(victima, 0)
+                                            SetPedCombatMovement(victima, 2)
+                                            SetPedCombatRange(victima, 1)
+                                            SetPedKeepTask(victima, true)
+                                            TaskCombatPed(victima, PlayerPedId(), 0, 16)
+                                            QBCore.Functions.Notify("La persona se resiste a ser robada", "error")
+                                            pedAtacada[victima] = true
+                                            Wait(2000)
+                                            roboActivo = false
+                                            RobberyPed(targetPed)
+                                        else
                                             roboActivo = true
                                             LoadAnim('missfbi5ig_22')
                                             LoadAnim('oddjobs@shop_robbery@rob_till')

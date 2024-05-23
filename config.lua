@@ -3,12 +3,16 @@ Robos.Debug = false
 
 Robos.mindinero = 20   ---dinero minimo que se roba en efectivo
 Robos.maxdinero = 80  ---dinero máximo que se roba en efectivo
+Robos.MinimoPolicia = 1
 Robos.huida = 30 --%
 Robos.tiempoRobo = 5000 -- descanso entre robos
-Robos.MinimoPolicia = 1
+Robos.Suerte = 10
+Robos.Agresivo = 10
 Robos.comando = "entorno" -- comando de aviso a la policía
 Robos.entorno = "Oh dios mio, acabo de ver a una persona amenazando a un viandante. Creo que intenta robarle!! Vengan rápido!!" --texto del aviso
 Robos.efectivo = true -- Usa item efectivo
+
+
 
 Robos.Items = {
     "samsungphone",
